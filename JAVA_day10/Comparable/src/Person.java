@@ -7,6 +7,10 @@ public class Person implements Comparable<Person>{
         this.age = age;
     }
 
+    public String getName() {
+        return name;
+    }
+
     @Override
     public int compareTo(Person other){
         return Integer.compare(this.age, other.age); //오름차순

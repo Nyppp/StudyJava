@@ -34,7 +34,7 @@ public class Main {
         
         //컴퍼레이터 객체로 생성하고, 람다식으로 정렬 방법 변경하는 방법
         //private 필드인 경우 사용 불가함
-        Comparator<Person> byName = Comparator.comparing((Person p) -> p.name).thenComparing((Person p)->p.age);
+        Comparator<Person> byName = Comparator.comparing((Person p) -> p.getName()).thenComparing((Person p)->p.age);
         list.sort(byName);
         System.out.println(list);
 
