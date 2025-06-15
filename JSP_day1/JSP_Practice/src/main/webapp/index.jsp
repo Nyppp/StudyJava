@@ -17,5 +17,14 @@
         <li><a href="pages/redirect-practice/login.jsp">로그인 페이지(리다이렉트)</a></li>
         <li><a href="pages/board-practice/boardList.jsp">게시판 페이지(간단한 게시물 작성)</a></li>
     </ul>
+
+    <p>06/13 JSP 실습 리스트</p>
+    <ul>
+        <li><a href="pages/basic-practice/grade.jsp">학점 계산</a></li>
+        <li><a href="pages/date-practice/date.jsp">날짜 처리</a></li>
+        <li><a href="pages/request-practice/name-form.jsp">Request 실습</a></li>
+        <li><a href="pages/session-practice/login.jsp">Session 실습</a></li>
+        <li><a href="pages/board-practice2/writeForm.jsp">forward/redirect 실습</a></li>
+    </ul>
 </body>
 </html>

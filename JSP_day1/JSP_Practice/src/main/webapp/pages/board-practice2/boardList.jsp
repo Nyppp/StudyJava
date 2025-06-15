@@ -7,19 +7,12 @@
 <body>
     <h1>Board List</h1>
     <%
-        String successMsg = (String)session.getAttribute("successMsg");
-        if(successMsg != null){
-            session.removeAttribute("successMsg");
-    %>
-            <p style="color: green"><%= successMsg %></p>
-    <%
-        }
         String postTitle = (String)session.getAttribute("postTitle");
         String postContent = (String)session.getAttribute("postContent");
 
         if(postTitle != null){
     %>
-            <h3>Lastest Post:</h3>
+            <h3>Latest Post:</h3>
             <p><strong>Title:</strong> <%=postTitle%></p>
             <p><strong>Content:</strong> <%=postContent%></p>
     <%
