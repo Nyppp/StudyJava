@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>회원가입 성공</title>
+</head>
+<body>
+    <h1 th:text="${message}">기본 메세지</h1>
+    <h2>가입 정보</h2>
+    <!-- user 객체에 직접 접근해서 변수 호출 가능 -->
+    <p><strong>이름 : </strong> <span th:text="${user.name}">이름</span></p>
+    <p><strong>이메일 : </strong> <span th:text="${user.email}">이메일</span></p>
+    <p><strong>나이 : </strong> <span th:text="${user.age}">나이</span></p>
+
+    <!--타임리프 a태그 사용법 : @{디렉토리} -->
+    <a th:href="@{/register}">다시 가입하기</a>
+</body>
+
+</html>

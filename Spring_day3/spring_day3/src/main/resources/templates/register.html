@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>회원가입</title>
+</head>
+<body>
+<h1>회원가입</h1>
+<form action="/register" method="post">
+    <p>
+        <label>이름:</label>
+        <input type="text" name="name" required>
+    </p>
+
+    <p>
+        <label>이메일:</label>
+        <input type="email" name="email" required>
+    </p>
+
+    <p>
+        <label>나이:</label>
+        <input type="number" name="age" required>
+    </p>
+
+    <p>
+        <label>전화번호:</label>
+        <input type="text" name="phone" required>
+    </p>
+    <p>
+        <button type="submit">가입하기</button>
+    </p>
+</form>
+
+</body>
+</html>

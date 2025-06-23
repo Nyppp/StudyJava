@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+
+<!--타임리프 태그, 속성을 html 태그로 사용한다-->
+<html xmlns:th="http://www.thymleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Hello Page</title>
+</head>
+<body>
+    <h1 th:text="${message}">기본 메세지</h1>
+    <p th:text="'사용자 : ' + ${userName}">사용자 이름</p>
+</body>
+
+</html>
