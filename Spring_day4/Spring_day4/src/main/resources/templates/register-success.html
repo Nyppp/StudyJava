@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head><title>User Form</title></head>
+<body>
+<h2 th:text="${message}">가입 성공 텍스트</h2>
+
+<h3>가입 정보</h3>
+<p>이름 : <span th:text="${user.name}">사용자 이름</span></p>
+<p>이메일 : <span th:text="${user.email}">이메일</span></p>
+<p>나이 : <span th:text="${user.age}">나이</span></p>
+</body>
+</html>

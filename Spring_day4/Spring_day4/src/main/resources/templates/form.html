@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>User Form</title>
+    <script>
+        async function submitForm() {
+            const name = document.getElementById("name").value;
+            const age = parseInt(document.getElementById("age").value);
+            const response = await fetch('/api/user', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ name, age })
+            });
+            const text = await response.text();
+            document.getElementById("result").innerText = text;
+        }
+    </script>
+</head>
+<body>
+<h1>사용자 정보 입력</h1>
+<label>이름: <input type="text" id="name"></label><br>
+<label>나이: <input type="number" id="age"></label><br>
+<button onclick="submitForm()">제출</button>
+<p id="result"></p>
+</body>
+</html>

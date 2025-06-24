@@ -1,0 +1,47 @@
+<html xmlns:th="http://thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>thymeleaf 실습</title>
+</head>
+
+<body>
+<!--컨트롤러에서 객체 저장 - 타임리프 텍스트로 멤버 + 멤버변수 접근해 출력 가능-->
+<!--타임리프 문법만 적용되기에 XSS 공격에 당하지 않음 -->
+    <h2 th:text="'회원 이름: ' + ${member.name} ? ${member.name} : '이름 없음'">회원 이름</h2>
+
+<!--utext : HTML 코드로 인식되는 텍스트-->
+    <p th:utext="'<b>주의!</b> 이메일을 확인하세요.'"></p>
+<!--직접 utext에 스타일도 줄 수 있지만, 권장하는 방식은 아님. (디버깅이 되지 않고, 따옴표 구분을 잘 해야함)-->
+<!--보통은 이런 처리는 js 프론트 레벨에서 처리하는 게 일반적-->
+    <p th:utext="${order.status == 'SHIPPED'} ?
+            '<span style=&quot;color:green&quot;>발송 완료</span>' :
+            '<span style=&quot;color:red&quot;>배송 대기중</span>'"></p>
+<!--th:value 사용-->
+    <input type="text" th:value="${member.email}" placeholder="이메일"><br>
+
+<!--타임리프 링크 생성방법 + 경로의 경우, @로 시작한다-->
+    <a th:href="@{/play}">새로고침</a><br>
+    <a th:href="@{'/order' + ${order.id}}">주문 상세 페이지 이동</a><br>
+
+<!--소스 사용 + 이미지들은 보통 /resources/static 에 저장-->
+    <img th:src="@{/images/logo.svg}" alt="로고" height="40" width="40"/>
+
+<!--타임리프 조건문 if / unless (거짓일 때만 동작) -->
+    <p th:if="${member.email}" th:text="'이메일 존재'"></p>
+    <p th:unless="${member.email}" th:text="'이메일 미존재'"></p>
+
+<!--타임리프 반복문 each-->
+    <ul>
+        <!--order.items에 있는 원소들을 꺼내 item에 저장, 이후 바로 같은 행에서 사용가능 (for(item : list) 처럼 사용)-->
+        <li th:each="item: ${order.items}" th:text="${item}"></li>
+    </ul>
+
+<!--필드-->
+    <form th:object="${member}" method="post"  th:action="@{/saveMember}">
+        <input type="text" th:field="*{name}" placeholder="이름"><br>
+        <input type="text" th:value="${#strings.toLowerCase(member.email)}"
+               th:field="*{email}" placeholder="이메일(lowercase)"><br>
+        <button type="submit">저장</button>
+    </form>
+</body>
+</html>

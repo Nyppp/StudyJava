@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>표현식 예제</title>
+</head>
+<body>
+<!--오브젝트 지정 후, 해당 태그 내부에서 * 선택자 통해 멤버 접근 가능-->
+    <div th:object="${profile}">
+        <p th:text="*{name}">이름</p>
+        <p th:text="*{age}">나이</p>
+    </div>
+
+<!--properties 접근 방법 > # 사용-->
+    <p th:text="#{welcome}">기본 메세지</p>
+    <p th:text="#{greeting}">간단 인사</p>
+
+<!--replace : 해당 태그를 대체 / insert : 해당 태그 하위에 삽입-->
+    <div th:replace="fragments/header :: simple"></div>
+    <div th:insert="fragments/header :: simple"></div>
+</body>
+</html>
