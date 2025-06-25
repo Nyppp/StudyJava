@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Add New User</title>
+    <style>
+        form { max-width: 400px; margin: 0 auto; }
+        label { display: block; margin-top: 10px; }
+        input { width: 100%; padding: 8px; margin-top: 5px; }
+        button { width: 100%; padding: 10px; margin-top: 15px; background-color: #007bff; color: white; border: none; cursor: pointer; }
+        .btn { padding: 8px 16px; text-decoration: none; background-color: #6c757d; color: white; border-radius: 3px; }
+    </style>
+</head>
+<body>
+<h2>Add New User</h2>
+<form method="post" action="/users">
+    <label for="name">Name:</label>
+    <input type="text" id="name" name="name" required>
+
+    <label for="age">Age:</label>
+    <input type="number" id="age" name="age" required>
+
+    <button type="submit">Create User</button>
+</form>
+<a href="/users" class="btn">Back to Users</a>
+</body>
+</html>

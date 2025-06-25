@@ -18,5 +18,19 @@
 <!--replace : 해당 태그를 대체 / insert : 해당 태그 하위에 삽입-->
     <div th:replace="fragments/header :: simple"></div>
     <div th:insert="fragments/header :: simple"></div>
+
+<!--텍스트 속성 - 대체 표현식-->
+    <p th:text="|이름은 ${profile.name}|"></p>
+
+<!--인라인 텍스트 - 스크립트 혹은 css로 사용 가능하다-->
+    <script th:inline="javascript">
+        let userProfile = /*[[${profile.name}]]*/;
+        console.log("안녕하세요 " + userProfile);
+    </script>
+    <style th:inline="css">
+        body{
+            font-size: /*[[${profile.age > 40} ? '1.3rem' : '1rem']]*/;
+        }
+    </style>
 </body>
 </html>

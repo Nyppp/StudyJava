@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Spring Day5 Application</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 40px; }
+        .container { max-width: 600px; margin: 0 auto; text-align: center; }
+        .btn { display: inline-block; padding: 15px 30px; margin: 10px; text-decoration: none; border-radius: 5px; font-size: 16px; }
+        .btn-primary { background-color: #007bff; color: white; }
+        .btn-success { background-color: #28a745; color: white; }
+        .btn-info { background-color: #17a2b8; color: white; }
+        h1 { color: #333; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>Welcome to Spring Day5 Application</h1>
+    <p>Manage your users, products, and orders efficiently!</p>
+
+    <div>
+        <a href="/users" class="btn btn-primary">Manage Users</a>
+        <a href="/products" class="btn btn-success">Manage Products</a>
+        <a href="/orders" class="btn btn-info">Manage Orders</a>
+    </div>
+</div>
+</body>
+</html>

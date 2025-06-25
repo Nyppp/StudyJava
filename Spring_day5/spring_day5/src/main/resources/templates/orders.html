@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Orders List</title>
+    <style>
+        table { border-collapse: collapse; width: 100%; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        th { background-color: #f2f2f2; }
+        .btn { padding: 5px 10px; margin: 2px; text-decoration: none; border-radius: 3px; }
+        .btn-primary { background-color: #007bff; color: white; }
+        .btn-success { background-color: #28a745; color: white; }
+    </style>
+</head>
+<body>
+<h2>Orders</h2>
+<a href="/orders/new" class="btn btn-success">New Order</a>
+<table>
+    <tr>
+        <th>ID</th>
+        <th>User</th>
+        <th>Product</th>
+        <th>Quantity</th>
+        <th>Order Date</th>
+        <th>Total Price</th>
+    </tr>
+    <tr th:each="order : ${orders}">
+        <td th:text="${order.id}"></td>
+        <td th:text="${order.user.name}"></td>
+        <td th:text="${order.product.productName}"></td>
+        <td th:text="${order.quantity}"></td>
+        <td th:text="${#temporals.format(order.orderDate, 'yyyy-MM-dd HH:mm')}"></td>
+        <td th:text="${#numbers.formatCurrency(order.product.price * order.quantity)}"></td>
+    </tr>
+</table>
+<div style="margin-top: 20px;">
+    <a href="/users" class="btn btn-primary">View Users</a>
+    <a href="/products" class="btn btn-primary">View Products</a>
+</div>
+</body>
+</html>
