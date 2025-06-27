@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${recipe?.title ?: '레시피 상세'}">레시피 상세</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 0; padding: 20px; background-color: #f5f5f5; }
+        .container { max-width: 800px; margin: 0 auto; background: white; padding: 30px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; padding-bottom: 15px; border-bottom: 2px solid #eee; }
+        .back-btn { padding: 8px 16px; border: 1px solid #ddd; border-radius: 4px; text-decoration: none; background: white; color: #333; }
+        .back-btn:hover { background: #f8f8f8; }
+
+        .recipe-title { font-size: 1.8em; font-weight: bold; color: #333; margin-bottom: 15px; }
+        .recipe-meta { color: #666; font-size: 0.9em; margin-bottom: 20px; }
+        .recipe-author { color: #007bff; font-weight: bold; }
+        .recipe-description { line-height: 1.6; color: #555; background: #f8f9fa; padding: 20px; border-radius: 4px; margin-bottom: 20px; }
+
+        .tags-section { margin-bottom: 20px; }
+        .tags-label { font-weight: bold; margin-bottom: 10px; }
+        .tag { display: inline-block; background: #007bff; color: white; padding: 4px 8px; border-radius: 4px; font-size: 0.8em; margin-right: 5px; }
+
+        .like-section { text-align: center; margin: 30px 0; padding: 20px; background: #f8f9fa; border-radius: 4px; }
+        .btn-like { background: #dc3545; color: white; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer; }
+        .btn-like:hover { background: #c82333; }
+        .btn-unlike { background: #007bff; color: white; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer; }
+        .btn-unlike:hover { background: #0056b3; }
+
+        .comments-section { margin-top: 30px; }
+        .comments-title { font-size: 1.2em; font-weight: bold; margin-bottom: 20px; border-bottom: 1px solid #ddd; padding-bottom: 10px; }
+        .comment { background: #f8f9fa; padding: 15px; border-radius: 4px; margin-bottom: 15px; border-left: 3px solid #007bff; }
+        .comment-header { font-weight: bold; margin-bottom: 5px; }
+        .comment-meta { color: #666; font-size: 0.8em; }
+        .comment-content { margin: 10px 0; }
+
+        .comment-form { background: #f8f9fa; padding: 20px; border-radius: 4px; margin-top: 20px; }
+        .comment-form textarea { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px; resize: vertical; }
+        .comment-form button { background: #28a745; color: white; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer; margin-top: 10px; }
+        .comment-form button:hover { background: #218838; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h1>레시피 상세</h1>
+        <a th:href="@{/recipes}" class="back-btn">목록으로</a>
+    </div>
+
+    <h2 class="recipe-title" th:text="${recipe?.title ?: '제목 정보 없음'}">레시피 제목</h2>
+    <div class="recipe-meta">
+        <div>작성자: <span class="recipe-author" th:text="${recipe?.author?.username ?: '익명'}">작성자</span></div>
+        <div>작성일: <span th:text="${recipe?.createdAt != null ? #temporals.format(recipe.createdAt, 'yyyy-MM-dd HH:mm') : '날짜 정보 없음'}">2024-01-01 12:00</span></div>
+    </div>
+
+    <div class="recipe-description" th:text="${recipe?.description ?: '설명이 없습니다.'}">레시피 설명</div>
+
+    <div class="tags-section" th:if="${recipe?.tags != null and !#lists.isEmpty(recipe.tags)}">
+        <div class="tags-label">태그:</div>
+        <span th:each="tag : ${recipe.tags}" class="tag" th:text="${tag?.name ?: '태그'}">태그</span>
+    </div>
+
+    <div class="like-section" th:if="${user != null}">
+        <form th:action="@{/recipes/{id}/like(id=${recipe?.id})}" method="post" style="display: inline;">
+            <button type="submit"
+                    th:class="${recipe?.likes != null && #lists.contains(recipe.likes, user) ? 'btn-unlike' : 'btn-like'}"
+                    th:text="${recipe?.likes != null && #lists.contains(recipe.likes, user) ? '좋아요 취소' : '좋아요'}">좋아요</button>
+        </form>
+        <span th:text="${recipe?.likes != null ? recipe.likes.size() : 0} + '명이 좋아합니다'">0명이 좋아합니다</span>
+    </div>
+
+    <div class="like-section" th:if="${user == null}">
+        <span th:text="${recipe?.likes != null ? recipe.likes.size() : 0} + '명이 좋아합니다'">0명이 좋아합니다</span>
+        <p><a th:href="@{/login}">로그인</a>하시면 좋아요를 누를 수 있습니다.</p>
+    </div>
+
+    <div class="comments-section">
+        <h3 class="comments-title">댓글</h3>
+
+        <div th:if="${recipe?.comments == null or #lists.isEmpty(recipe.comments)}">
+            <p>아직 댓글이 없습니다. 첫 번째 댓글을 작성해보세요!</p>
+        </div>
+
+        <div th:each="comment : ${recipe?.comments ?: {}}" class="comment">
+            <div class="comment-header">
+                <span th:text="${comment?.user?.username ?: '익명'}">사용자</span>
+                <span class="comment-meta" th:text="${comment?.createdAt != null ? #temporals.format(comment.createdAt, 'yyyy-MM-dd HH:mm') : '날짜 정보 없음'}">2024-01-01 12:00</span>
+            </div>
+            <div class="comment-content" th:text="${comment?.content ?: '내용이 없습니다.'}">댓글 내용</div>
+        </div>
+
+        <div class="comment-form" th:if="${user != null}">
+            <form th:action="@{/recipes/{id}/comments(id=${recipe?.id})}" method="post">
+                <textarea name="content" rows="3" placeholder="댓글을 작성해주세요..." required></textarea>
+                <button type="submit">댓글 작성</button>
+            </form>
+        </div>
+
+        <div class="comment-form" th:if="${user == null}">
+            <p><a th:href="@{/login}">로그인</a>하시면 댓글을 작성할 수 있습니다.</p>
+        </div>
+    </div>
+</div>
+</body>
+</html>

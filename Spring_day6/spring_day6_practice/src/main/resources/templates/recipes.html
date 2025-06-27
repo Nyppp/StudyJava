@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>레시피 공유 커뮤니티</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 0; padding: 20px; background-color: #f5f5f5; }
+        .container { max-width: 1000px; margin: 0 auto; background: white; padding: 30px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; padding-bottom: 15px; border-bottom: 2px solid #eee; }
+        .header h1 { color: #333; margin: 0; }
+        .auth-info { display: flex; align-items: center; gap: 10px; }
+
+        .btn { padding: 8px 16px; border: 1px solid #ddd; border-radius: 4px; text-decoration: none; background: white; color: #333; font-size: 14px; }
+        .btn:hover { background: #f8f8f8; }
+        .btn-primary { background: #007bff; color: white; border-color: #007bff; }
+        .btn-primary:hover { background: #0056b3; }
+
+        .search-section { background: #f8f9fa; padding: 20px; border-radius: 4px; margin-bottom: 20px; }
+        .search-form { display: flex; gap: 10px; align-items: center; }
+        .search-input { flex: 1; padding: 8px 12px; border: 1px solid #ddd; border-radius: 4px; }
+        .search-select { padding: 8px 12px; border: 1px solid #ddd; border-radius: 4px; }
+
+        .new-recipe { text-align: center; margin-bottom: 30px; }
+        .btn-new { background: #28a745; color: white; padding: 12px 24px; border: none; border-radius: 4px; text-decoration: none; font-weight: bold; }
+        .btn-new:hover { background: #218838; }
+
+        .recipes-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; }
+        .recipe-card { border: 1px solid #ddd; border-radius: 4px; padding: 20px; background: white; }
+        .recipe-title { font-size: 1.2em; font-weight: bold; margin-bottom: 10px; color: #333; }
+        .recipe-meta { color: #666; font-size: 0.9em; margin-bottom: 15px; }
+        .recipe-actions { text-align: center; }
+
+        .pagination { text-align: center; margin-top: 30px; }
+        .pagination a { margin: 0 5px; padding: 8px 12px; border: 1px solid #ddd; border-radius: 4px; text-decoration: none; color: #333; }
+        .pagination a:hover { background: #f8f8f8; }
+
+        .no-recipes { text-align: center; padding: 40px; color: #666; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h1>레시피 공유 커뮤니티</h1>
+        <div class="auth-info">
+            <div th:if="${user != null}">
+                <span>안녕하세요, <strong th:text="${user?.username}">사용자</strong>님!</span>
+                <a th:href="@{/logout}" class="btn">로그아웃</a>
+            </div>
+            <div th:if="${user == null}">
+                <a th:href="@{/login}" class="btn">로그인</a>
+                <a th:href="@{/register}" class="btn btn-primary">회원가입</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="search-section">
+        <form th:action="@{/recipes}" method="get" class="search-form">
+            <input type="text" name="keyword" placeholder="레시피 제목으로 검색..." th:value="${keyword ?: ''}" class="search-input"/>
+            <select name="tag" class="search-select">
+                <option value="">모든 태그</option>
+                <option th:each="t : ${tags ?: {}}" th:value="${t?.name}" th:text="${t?.name}" th:selected="${t?.name == tag}"></option>
+            </select>
+            <button type="submit" class="btn btn-primary">검색</button>
+        </form>
+    </div>
+
+    <div class="new-recipe">
+        <a th:href="@{/recipes/new}" class="btn-new">새 레시피 등록</a>
+    </div>
+
+    <div th:if="${page == null || #lists.isEmpty(page.content)}" class="no-recipes">
+        <h3>등록된 레시피가 없습니다</h3>
+        <p>첫 번째 레시피를 등록해보세요!</p>
+    </div>
+
+    <div th:if="${page != null && !#lists.isEmpty(page.content)}" class="recipes-grid">
+        <div th:each="recipe : ${page.content}" class="recipe-card">
+            <h3 class="recipe-title" th:text="${recipe?.title ?: '제목 없음'}">레시피 제목</h3>
+            <div class="recipe-meta">
+                <span th:text="${recipe?.createdAt != null ? #temporals.format(recipe.createdAt, 'yyyy-MM-dd HH:mm') : '날짜 정보 없음'}">2024-01-01 12:00</span>
+            </div>
+            <div class="recipe-actions">
+                <a th:href="@{/recipes/{id}(id=${recipe?.id})}" class="btn btn-primary">자세히 보기</a>
+            </div>
+        </div>
+    </div>
+
+    <div th:if="${page != null && page.totalPages > 1}" class="pagination">
+        <a th:if="${page.hasPrevious()}"
+           th:href="@{/recipes(page=${page.number-1}, keyword=${keyword}, tag=${tag})}">이전</a>
+
+        <span th:text="'페이지 ' + (${page.number}+1) + ' / ' + ${page.totalPages}">페이지 1 / 1</span>
+
+        <a th:if="${page.hasNext()}"
+           th:href="@{/recipes(page=${page.number+1}, keyword=${keyword}, tag=${tag})}">다음</a>
+    </div>
+</div>
+</body>
+</html>
