@@ -1,8 +1,10 @@
 package com.example.spring_day6_practice.controller;
 
+import com.example.spring_day6_practice.model.Comment;
 import com.example.spring_day6_practice.model.Recipe;
 import com.example.spring_day6_practice.model.Tag;
 import com.example.spring_day6_practice.model.User;
+import com.example.spring_day6_practice.service.CommentService;
 import com.example.spring_day6_practice.service.RecipeService;
 import com.example.spring_day6_practice.service.TagService;
 import jakarta.servlet.http.HttpSession;
@@ -14,6 +16,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
@@ -24,6 +27,8 @@ public class RecipeController {
     private TagService tagService;
     @Autowired
     private RecipeService recipeService;
+    @Autowired
+    private CommentService commentService;
 
     @GetMapping("/recipes")
     public String showRecipePage(@RequestParam(defaultValue = "0") int page,
@@ -44,12 +49,14 @@ public class RecipeController {
             model.addAttribute("page", recipePage);
             model.addAttribute("keyword", keyword);
             model.addAttribute("tag", tag);
+            model.addAttribute("tags", tagService.findAll() != null ? tagService.findAll() : Collections.emptyList());
             model.addAttribute("user", session.getAttribute("user")); // 로그인 상태 확인용
         } catch (Exception e) {
             // 에러 발생시 빈 페이지 처리
             model.addAttribute("page", null);
             model.addAttribute("keyword", keyword);
             model.addAttribute("tag", tag);
+            model.addAttribute("tags", Collections.emptyList());
             model.addAttribute("user", session.getAttribute("user"));
         }
         return "recipes";
@@ -67,6 +74,49 @@ public class RecipeController {
             return "recipes";
         }
     }
+
+    @PostMapping("/recipes/{id}/like")
+    public String addLikes(@PathVariable Long id, Model model, HttpSession session){
+        Optional<Recipe> recipeOptional = recipeService.findRecipeById(id);
+        Recipe recipe = recipeOptional.get();
+
+        if(recipe != null){
+            User user = (User)session.getAttribute("user");
+            if(recipe.getLikes().contains(user)){
+                recipe.getLikes().remove(user);
+            }else{
+                recipe.getLikes().add(user);
+            }
+
+            recipeService.updateRecipe(id, recipe);
+
+            model.addAttribute("user", session.getAttribute("user"));
+            model.addAttribute("recipe", recipe);
+        }
+
+        return "redirect:/recipes/" + id;
+    }
+
+    @PostMapping("/recipes/{id}/comments")
+    public String addComments(@PathVariable Long id, @RequestParam String content, Model model, HttpSession session){
+        Optional<Recipe> recipeOptional = recipeService.findRecipeById(id);
+        Recipe recipe = recipeOptional.get();
+
+        if(recipe != null){
+            User user = (User)session.getAttribute("user");
+            Comment comment = new Comment(content, user, recipe);
+
+            recipe.getComments().add(comment);
+
+            recipeService.updateRecipe(id, recipe);
+
+            model.addAttribute("user", session.getAttribute("user"));
+            model.addAttribute("recipe", recipe);
+        }
+
+        return "redirect:/recipes/" + id;
+    }
+
 
     @GetMapping("/recipes/new")
     public String showRecipeForm(Model model, HttpSession session){
@@ -90,7 +140,7 @@ public class RecipeController {
             return "login";
         }
 
-        recipeService.createRecipe(title, description, tags, user.getId());
-        return "redirect:/recipes";
+        Long id = recipeService.createRecipe(title, description, tags, user.getId()).getId();
+        return "redirect:/recipes/" + id;
     }
 }

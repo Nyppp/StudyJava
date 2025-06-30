@@ -70,6 +70,14 @@ public class RecipeServiceImpl implements RecipeService{
     }
 
     @Override
+    public Recipe updateRecipe(Long id, Recipe updatedRecipe) {
+        return recipeRepository.findById(id).map(recipe-> {
+            recipe.setLikes(updatedRecipe.getLikes());
+            return recipeRepository.save(recipe);
+        }).orElseThrow(()-> new RuntimeException("게시글 존재하지 않음 " + id));
+    }
+
+    @Override
     public Page<Recipe> findAll(Pageable pageable) {
         List<Recipe> allRecipes = getAllRecipes();
 
@@ -86,6 +94,21 @@ public class RecipeServiceImpl implements RecipeService{
 
     @Override
     public Page<Recipe> findByTitleContaining(String keyword, Pageable pageable) {
-        return null;
+        List<Recipe> allRecipes = new ArrayList<>();
+        for (Recipe recipe : getAllRecipes()){
+            if(recipe.getTitle().contains(keyword)){
+                allRecipes.add(recipe);
+            }
+        }
+
+        allRecipes.sort((p1, p2) -> p2.getCreatedAt().compareTo(p1.getCreatedAt()));
+
+        int start = (int)pageable.getOffset();
+        int end = Math.min(start + pageable.getPageSize(), allRecipes.size());
+
+        List<Recipe> pageContent = start >= allRecipes.size()?
+                new ArrayList<>() : allRecipes.subList(start, end);
+
+        return new PageImpl<>(pageContent, pageable, allRecipes.size());
     }
 }

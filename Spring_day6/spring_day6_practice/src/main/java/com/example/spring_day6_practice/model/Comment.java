@@ -24,10 +24,9 @@ public class Comment {
     public Comment() {
     }
 
-    public Comment(Long id, String content, LocalDateTime createdAt, User user, Recipe recipe) {
-        this.id = id;
+    public Comment(String content, User user, Recipe recipe) {
         this.content = content;
-        this.createdAt = createdAt;
+        this.createdAt = LocalDateTime.now();
         this.user = user;
         this.recipe = recipe;
     }

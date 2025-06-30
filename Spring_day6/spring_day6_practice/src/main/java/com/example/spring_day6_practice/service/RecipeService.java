@@ -12,6 +12,7 @@ import org.springframework.data.domain.Pageable;
 
 public interface RecipeService {
     Recipe createRecipe(String title, String content, String tags, Long userId);
+    Recipe updateRecipe(Long id, Recipe recipe);
     Optional<Recipe> findRecipeById(Long id);
     List<Recipe> findRecipesByTitle(String title);
     List<Recipe> findRecipesByTag(Tag tag);
