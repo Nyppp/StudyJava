@@ -11,11 +11,15 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.security.Principal;
+import java.util.ArrayList;
+import java.util.List;
 
 @Controller
 public class HomeController {
     @Autowired
     private InMemoryUserDetailsManager inMemoryUserDetailsManager;
+
+    private List<UserDetails> users = new ArrayList<>();
 
     @GetMapping({"/", "/home"})
     public String home(Principal principal, Model model){
@@ -45,7 +49,15 @@ public class HomeController {
                 .roles(auth)
                 .build();
         inMemoryUserDetailsManager.createUser(user);
+        users.add(user);
 
         return "redirect:/login?register";
+    }
+
+    @GetMapping("/member")
+    public String showMember(Model model){
+        model.addAttribute("users", users);
+
+        return "member";
     }
 }
