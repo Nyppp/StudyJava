@@ -1,0 +1,13 @@
+spring:
+  application:
+    name: env-demo
+
+# TODO: 환경변수로 대체 가능한 기본값 설정
+app:
+  name: ${APP_NAME:DefaultApp}
+  version: ${APP_VERSION:1.0.0}
+
+logging:
+  level:
+    root: ${LOG_LEVEL:INFO}
+    com.example: ${APP_LOG_LEVEL:DEBUG}

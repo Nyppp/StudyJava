@@ -1,0 +1,19 @@
+# 운영 환경 설정
+server:
+  port: ${SERVER_PORT:8080}
+
+spring:
+  datasource:
+    url: ${DATABASE_URL}
+    username: ${DATABASE_USERNAME}
+    password: ${DATABASE_PASSWORD}
+    hikari:
+      maximum-pool-size: ${DB_POOL_SIZE:10}
+
+app:
+  api:
+    key: ${API_KEY:#{null}}
+    url: ${API_BASE_URL:#{null}
+
+  monitoring:
+    enabled: true
